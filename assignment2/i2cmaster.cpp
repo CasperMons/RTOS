@@ -6,40 +6,39 @@
 #include <iostream>
 #include <unistd.h>
 
-int main(){
+int main() {
 
 	CRC8 checker;
 
-	int sleeper;
+	int sleepTime;
 	std::cout << "Enter usleep value: ";
-	std::cin >> sleeper;
+	std::cin >> sleepTime;
 
 	gpioInitialise();
-	std::cout << "This is Sinterklaas speaking...\n" << std::endl;
+	std::cout << "This is the master speaking...\n" << std::endl;
 
 	int handle = i2cOpen(1, 0x0A, 0);
-	char* ding = "HotBox Piet";
-	std::vector<unsigned char> stringding;
+	char* strData = "HotBox Piet";
+	std::vector<unsigned char> vecData;
 
-	stringding.assign(ding, ding+11);
+	vecData.assign(strData, strData + 11);
 
-	checker.calculate(&stringding);
+	checker.calculate(&vecData);
 
-	for(int i = 0; i < stringding.size(); i++){
-		printf("0x%x ", stringding.at(i));
+	for (int i = 0; i < vecData.size(); i++) {
+		printf("0x%x ", vecData.at(i));
 	}
 
 	printf("\n");
 
-//	for (int i = 0; i < 10; i++){
 	int i = 0;
-	while(1){
+	while (1) {
 		i++;
-		i2cWriteDevice(handle, reinterpret_cast<char*>(stringding.data()), stringding.size() );
-		if(i % 1000 == 0){
+		i2cWriteDevice(handle, reinterpret_cast<char*>(vecData.data()), vecData.size());
+		if (i % 1000 == 0) {
 			printf("%d\n", i);
 		}
-		usleep(sleeper);
+		usleep(sleepTime);
 	}
 	return 0;
 }
